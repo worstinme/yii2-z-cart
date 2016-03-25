@@ -1,0 +1,25 @@
+{
+	"name": "worstinme/yii2-z-cart",
+	"description": "Yii2 content module & widgets",
+	"keywords": ["yii2", "content", "widgets"],
+	"type": "yii2-extension",
+	"license": "MIT",
+	"support": {
+		"source": "https://github.com/worstinme/yii2-z-cart"
+	},
+	"authors": [
+        {
+            "name": "Evgeny Zakirov",
+            "homepage" : "http://flyleaf.su"
+        }
+	],
+	"require": {
+		"yiisoft/yii2": "*",
+		"worstinme/yii2-uikit": "*"
+	},
+	"autoload": {
+		"psr-4": {
+            "worstinme\\zcart\\": ""
+        }
+	}
+}
