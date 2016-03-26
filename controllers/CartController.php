@@ -8,8 +8,23 @@ use Yii;
 
 class CartController extends \yii\web\Controller
 {
-  
-    public $relations = [];
+    
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['checkout'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'actions'=>['checkout'],
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function actionIndex() {
 
@@ -23,6 +38,15 @@ class CartController extends \yii\web\Controller
 
         return $this->render('index',[
         	'cart'=>$cart,
+        ]);
+    }
+
+    public function actionCheckout() {
+
+        $cart = new Cart;
+
+        return $this->render('checkout',[
+            'cart'=>$cart,
         ]);
     }
 

@@ -9,6 +9,17 @@ class Cart extends Model
 {
     public $items = [];
 
+    public function rules()
+    {
+        return [
+            // name, email, subject and body are required
+            [['comment', 'phone','adress'], 'required'],
+            [['name', 'phone','adress','body'], 'string'],
+            // email has to be a valid email address
+            ['email', 'email'],
+        ];
+    }
+
     public function init() {
 
         parent::init();
@@ -41,6 +52,8 @@ class Cart extends Model
 
     }
 
+
+
     public function save()
     {
         $items = [];
@@ -67,5 +80,28 @@ class Cart extends Model
         $amount = 0;
         foreach ($this->items as $item) $amount += $item->count;
         return $amount;
+    }
+
+
+    public function attributeLabels()
+    {
+        return [];
+    }
+
+    public function contact($order,$items)
+    {
+        if ($this->validate()) {
+
+            $mailer = Yii::$app->mailer->compose('checkout', ['order' => $order,'items'=>$items,'form'=>$this])
+                    ->setFrom(['benvenuto@studio-good.ru' => 'benvenuto.su'])
+                    ->setTo([Yii::$app->params['adminEmail'],'benvenuto@studio-good.ru'])
+                    ->setSubject('Заказ с сайта benvenuto.su');
+
+            if ($mailer->send()) {
+                return true;  
+            }
+
+        }
+        return false;
     }
 }
