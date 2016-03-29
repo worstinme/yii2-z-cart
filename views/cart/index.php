@@ -2,17 +2,25 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use worstinme\uikit\Breadcrumbs;
 
 $this->registerJs('$.pjax.defaults.scrollTo = false', $this::POS_READY);
+$this->title = 'Ваш заказ';
+
+$this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="materials materials-item">
+<div class="uk-container uk-container-center">
+	<?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],]) ?>
+</div>
+
+<div class="main">
 <div class="uk-container uk-container-center">
 
 <?php  \yii\widgets\Pjax::begin(['id'=>'z-cart','timeout'=>5000,'options'=>['data-uk-observe'=>true,'scrollTo'=>false]]); ?> 
 
-	<h1 class="uk-text-center"><span>Ваш заказ</span></h1>
+	<h1 class="uk-text-center"><span><?=$this->title?></span></h1>
 
 	<?php if (count($cart->items) <= 0): ?>
 	<?=Yii::$app->params['z-cart']['empty_cart_text']?>
@@ -30,7 +38,7 @@ $this->registerJs('$.pjax.defaults.scrollTo = false', $this::POS_READY);
 	<tbody>
 	<?php foreach ($cart->items as $item): ?>
 		<tr>
-			<td><?= Html::a($item->model->name, $item->model->url, ['target' => '_blank']); ?></td>
+			<td><?= Html::a($item->model->name, $item->model->url, ['target' => '_blank','data'=>['pjax'=>false]]); ?></td>
 			<td class="uk-text-right">
 				<?php if ($item->count>1): ?>
 				<?= Html::a('<i class="uk-icon-minus"></i>', ['index'], ['class'=>'z-cart-plus', 'data' => [ 
@@ -73,7 +81,7 @@ $this->registerJs('$.pjax.defaults.scrollTo = false', $this::POS_READY);
 
 	<?php if ($cart->sum >= Yii::$app->params['z-cart']['min_to_order']): ?>
 		
-		<p class="uk-text-center"><?= Html::a('Оформить', ['checkout'], ['class' => 'tm-button-red','data-pjax'=>false]); ?></p>
+		<p class="uk-text-center"><?= Html::a('Оформить', ['checkout'], ['class' => 'tm-button-red','data'=>['pjax'=>false]]); ?></p>
 
 	<?php else: ?>
 
