@@ -9,6 +9,9 @@ use Yii;
 class CartController extends \yii\web\Controller
 {
     
+    public $checkoutAccess = ['@'];
+    public $orderModel = '\worstinme\zcart\models\CartOrders';
+
     public function behaviors()
     {
         return [
@@ -18,7 +21,7 @@ class CartController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => $this->checkoutAccess,
                         'actions'=>['checkout'],
                     ],
                 ],
@@ -45,8 +48,22 @@ class CartController extends \yii\web\Controller
 
         $cart = new Cart;
 
+        $order = $this->orderModel;
+
+        if (count($cart->sum < Yii::$app->params['z-cart']['min_to_order'])) {
+            
+        }
+
+        $model = new $order();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->setFlash('success', 'Ваш заказ успешно отправлен.');
+            return $this->redirect(['orders']);
+        } 
+
         return $this->render('checkout',[
             'cart'=>$cart,
+            'model'=>$model,
         ]);
     }
 

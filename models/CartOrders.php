@@ -3,21 +3,13 @@
 namespace worstinme\zcart\models;
 
 use Yii;
+use yii\helpers\Json;
 
-/**
- * This is the model class for table "{{%cart_orders}}".
- *
- * @property integer $id
- * @property string $user_id
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $state
- * @property integer $params
- * @property integer $paid
- */
 class CartOrders extends \yii\db\ActiveRecord
 {
-   
+    
+    public $jsonParams = ['adress','body','contactName','email','phone'];
+
     /**
      * @inheritdoc
      */
@@ -26,16 +18,25 @@ class CartOrders extends \yii\db\ActiveRecord
         return '{{%cart_orders}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            \yii\behaviors\TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['created_at', 'updated_at', 'params'], 'required'],
-            [['created_at', 'updated_at', 'state', 'params', 'paid'], 'integer'],
-            [['user_id'], 'string', 'max' => 255],
-            [['items'],'safe'],
+            [['params'], 'required'],
+            [['state', 'params', 'paid'], 'integer'],
+            [['params'], 'string'],
+            
+            [$this->jsonParams,'string'],
+            ['email','email'],
         ];
     }
 
@@ -50,10 +51,42 @@ class CartOrders extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'state' => 'State',
-            'params' => 'Params',
+            'adress' => 'Адрес',
+            'body' => 'Сообщение',
+            'contactName' => 'Контактное лиц',
+            'email' => 'Электронная почта',
+            'phone' => 'Телефон',
             'paid' => 'Paid',
         ];
     }
     
+    public function __get($name)
+    { 
+        if (in_array($name, $this->jsonParams)) {
+            return $this->getJsonParams($name);
+        } else {
+            return parent::__get($name);
+        }
+    }
+
+    public function __set($name, $value)
+    { 
+        if (in_array($name, $this->jsonParams)) {
+            return $this->setJsonParams($name, $value);
+        } else {
+            return parent::__set($name, $value);
+        }
+    } 
+
+    public function getJsonParams($name) {
+        $params = !empty($this->params) ? Json::decode($this->params) : [];
+        return isset($params[$name]) ? $params[$name] : null;
+    }
+
+    public function setJsonParams($name,$value) {
+        $params = !empty($this->params) ? Json::decode($this->params) : [];
+        $params[$name] = $value;
+        return $this->params = Json::encode($params);
+    }
 
 }

@@ -27,15 +27,17 @@ $this->params['breadcrumbs'][] = 'Оформление';
 
 	<?php $form = ActiveForm::begin(['id' => 'contact-form','layout'=>'horizontal','field_width'=>'full']); ?>
 
-    	<?= $form->field($cart, 'name') ?>
+    	<?= $form->field($model, 'contactName') ?>
 
-    	<?= $form->field($cart, 'email') ?>
+    	<?= $form->field($model, 'email') ?>
 
-        <?= $form->field($cart, 'phone')->widget(\yii\widgets\MaskedInput::className(), [
+        <?= $form->field($model, 'phone')->widget(\yii\widgets\MaskedInput::className(), [
             'mask' => '+7 (999) 9999999',
         ]) ?>
 
-        <?= $form->field($cart, 'body')->textArea(['rows' => 6]) ?>
+        <?= $form->field($model, 'adress') ?>
+
+        <?= $form->field($model, 'body')->textArea(['rows' => 6]) ?>
 
 		<div class="uk-form-row uk-text-center">
             <?= Html::submitButton('Оформить', ['class' => 'uk-button uk-button-danger', 'name' => 'contact-button']) ?>
