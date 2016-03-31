@@ -3,7 +3,9 @@
 namespace worstinme\zcart\controllers;
 
 use worstinme\zcart\models\Cart;
+use worstinme\zcart\models\CartOrders;
 use yii\web\NotFoundHttpException;
+use yii\data\ActiveDataProvider;
 use Yii;
 
 class CartController extends \yii\web\Controller
@@ -11,18 +13,22 @@ class CartController extends \yii\web\Controller
     
     public $checkoutAccess = ['@'];
     public $orderModel = '\worstinme\zcart\models\CartOrders';
+    public $states = [
+        'Отправлен',
+        'Выполнен',
+    ];
 
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => \yii\filters\AccessControl::className(),
-                'only' => ['checkout'],
+                'only' => ['checkout','orders'],
                 'rules' => [
                     [
                         'allow' => true,
                         'roles' => $this->checkoutAccess,
-                        'actions'=>['checkout'],
+                        'actions'=>['checkout','orders'],
                     ],
                 ],
             ],
@@ -44,20 +50,42 @@ class CartController extends \yii\web\Controller
         ]);
     }
 
+    public function actionOrders() {
+
+        $order = $this->orderModel;
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $order::find()->where(['user_id'=>Yii::$app->user->identity->id])
+        ]);
+
+        return $this->render('orders',[
+            'dataProvider'=>$dataProvider,
+        ]);
+    }
+
     public function actionCheckout() {
 
         $cart = new Cart;
 
         $order = $this->orderModel;
 
-        if (count($cart->sum < Yii::$app->params['z-cart']['min_to_order'])) {
-            
+        if ($cart->sum < Yii::$app->params['z-cart']['min_to_order']) {
+            return $this->redirect(['index']);
         }
 
         $model = new $order();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            foreach ($cart->items as $item) {
+                $item->order_id = $model->id;
+                $item->save();
+            }
+
+            $cart->close();
+
             Yii::$app->getSession()->setFlash('success', 'Ваш заказ успешно отправлен.');
+
             return $this->redirect(['orders']);
         } 
 

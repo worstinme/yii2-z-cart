@@ -41,7 +41,10 @@ class Cart extends Model
 
     }
 
-
+    public function close() {
+        
+        return Yii::$app->response->cookies->remove('cart');
+    }
 
     public function save()
     {

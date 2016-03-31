@@ -32,9 +32,9 @@ class CartOrders extends \yii\db\ActiveRecord
     {
         return [
             [['params'], 'required'],
-            [['state', 'params', 'paid'], 'integer'],
+            [['state', 'paid'], 'integer'],
             [['params'], 'string'],
-            
+
             [$this->jsonParams,'string'],
             ['email','email'],
         ];
@@ -58,6 +58,14 @@ class CartOrders extends \yii\db\ActiveRecord
             'phone' => 'Телефон',
             'paid' => 'Paid',
         ];
+    }
+
+    public function getItems() {
+        return $this->hasMany(CartOrderItems::className(),['order_id'=>'id']);
+    }
+
+    public function getSum() {
+        return CartOrderItems::find()->where(['order_id'=>$this->id])->sum('price*count'); 
     }
     
     public function __get($name)
@@ -87,6 +95,20 @@ class CartOrders extends \yii\db\ActiveRecord
         $params = !empty($this->params) ? Json::decode($this->params) : [];
         $params[$name] = $value;
         return $this->params = Json::encode($params);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+
+            if (!Yii::$app->user->isGuest) {
+                $this->user_id = Yii::$app->user->identity->id;
+            }
+            
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = 'Оформление';
 
 	<h1 class="uk-text-center"><span><?=$this->title?></span></h1>
 
-	<?php $form = ActiveForm::begin(['id' => 'contact-form','layout'=>'horizontal','field_width'=>'full']); ?>
+	<?php $form = ActiveForm::begin(['id' => 'contact-form','layout'=>'horizontal','field_width'=>'full','options'=>['class'=>'uk-margin-large-top']]); ?>
 
     	<?= $form->field($model, 'contactName') ?>
 
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = 'Оформление';
 
         <?= $form->field($model, 'adress') ?>
 
-        <?= $form->field($model, 'body')->textArea(['rows' => 6]) ?>
+        <?= $form->field($model, 'body')->textArea(['rows' => 6,'placeholder'=>'Оставьте комментарий к заказу']) ?>
 
 		<div class="uk-form-row uk-text-center">
             <?= Html::submitButton('Оформить', ['class' => 'uk-button uk-button-danger', 'name' => 'contact-button']) ?>
