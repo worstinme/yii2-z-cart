@@ -14,12 +14,12 @@ use yii\helpers\Url;
 </div>
 <div class="uk-width-medium-2-3 uk-text-center">
 <?= Html::a($label, $url = null, ['class'=> 'buy-button', 
-    				'data'=> [
-    					'item_id'=>$model->id, 
-    					'relation'=>0, 
-    					'price'=>$model->price
-    				]
-    			]); ?>
+    	'data'=> [
+    		'item_id'=>$model->id, 
+    		'relation'=>0, 
+    		'price'=>$model->price
+    	]
+    ]); ?>
 
 <?php endif; ?>
 </div>
@@ -29,7 +29,7 @@ use yii\helpers\Url;
 
 $js = <<<JS
 
-$("body").on("click",".buy-button", function(e) {
+$(".buy-button").on("click", function(e) {
 	var count = $(this).parents(".z-cart-widget").find("[name='count']").val(), 
         relation = $(this).data("relation"), 
         price = $(this).data("price"), 
@@ -47,7 +47,7 @@ $("body").on("click",".buy-button", function(e) {
         },
         success: function(data) {
             UIkit.notify({message:data.message,status:data.message});
-            $(".z-cart-sum").html(data.sum),
+            $(".z-cart-state").html(data.state),
             console.log(data);
         }
     });

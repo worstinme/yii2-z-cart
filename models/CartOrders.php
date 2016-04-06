@@ -8,6 +8,19 @@ use yii\helpers\Json;
 class CartOrders extends \yii\db\ActiveRecord
 {
     
+    public static $states = [
+        'Новый',
+        'Выполнен',
+    ];
+
+    public static $paids = [
+        'Не оплачен',
+        'Оплачен',
+    ];
+
+    public $emailSubject = 'Заказ с сайта';
+    public $adminEmailSubject = 'Заказ с сайта';
+
     public $jsonParams = ['adress','body','contactName','email','phone'];
 
     /**
@@ -64,8 +77,18 @@ class CartOrders extends \yii\db\ActiveRecord
         return $this->hasMany(CartOrderItems::className(),['order_id'=>'id']);
     }
 
+    public function getUser() {
+        return $this->hasOne(Yii::$app->user->identity->className(),['id'=>'user_id']);
+    }
+
     public function getSum() {
         return CartOrderItems::find()->where(['order_id'=>$this->id])->sum('price*count'); 
+    }
+
+    public function getAmount() {
+        $amount = 0;
+        foreach ($this->items as $item) $amount += $item->count;
+        return $amount;
     }
     
     public function __get($name)
@@ -101,7 +124,7 @@ class CartOrders extends \yii\db\ActiveRecord
     {
         if (parent::beforeSave($insert)) {
 
-            if (!Yii::$app->user->isGuest) {
+            if (!Yii::$app->user->isGuest && $insert) {
                 $this->user_id = Yii::$app->user->identity->id;
             }
             
@@ -109,6 +132,15 @@ class CartOrders extends \yii\db\ActiveRecord
         } else {
             return false;
         }
+    }
+
+
+    public function afterDelete()
+    {
+        Yii::$app->db->createCommand()->delete('{{%cart_order_items}}', ['order_id'=>$this->id])->execute();
+
+        parent::afterDelete();
+        
     }
 
 }

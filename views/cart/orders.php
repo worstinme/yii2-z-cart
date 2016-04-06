@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = 'История заказов';
                 'label'=>'Статус заказа',
                 'format' => 'raw',
                 'value' => function ($model, $index, $widget) {
-                    return !empty(Yii::$app->controller->states[$model->state]) ? Yii::$app->controller->states[$model->state] : $model->state;
+                    return !empty($model::$states[$model->state]) ? $model::$states[$model->state] : $model->state;
                 },
                 'headerOptions'=>['class'=>'uk-text-center'],
                 'contentOptions'=>['class'=>'uk-text-center'],

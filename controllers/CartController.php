@@ -13,10 +13,6 @@ class CartController extends \yii\web\Controller
     
     public $checkoutAccess = ['@'];
     public $orderModel = '\worstinme\zcart\models\CartOrders';
-    public $states = [
-        'Отправлен',
-        'Выполнен',
-    ];
 
     public function behaviors()
     {
@@ -84,7 +80,24 @@ class CartController extends \yii\web\Controller
 
             $cart->close();
 
-            Yii::$app->getSession()->setFlash('success', 'Ваш заказ успешно отправлен.');
+            $from = !empty(Yii::$app->params['senderEmail']) ? Yii::$app->params['senderEmail'] : Yii::$app->params['adminEmail'];
+            
+            Yii::$app->mailer->compose('@worstinme/zcart/mail/checkout', ['order' => $model])
+                        ->setFrom($from)
+                        ->setTo(Yii::$app->params['adminEmail'])
+                        ->setSubject($model->adminEmailSubject)
+                        ->send();
+
+            if (!empty($model->email)) {
+
+                $mailer = Yii::$app->mailer->compose('@worstinme/zcart/mail/checkout', ['order' => $model])
+                    ->setFrom($from)->setTo($model->email)->setSubject($model->emailSubject);
+
+                if ($mailer->send()) {
+                    Yii::$app->getSession()->setFlash('success', 'Спасибо! Ваш заказ отправлен.');
+                }
+
+            }
 
             return $this->redirect(['orders']);
         } 
@@ -116,6 +129,7 @@ class CartController extends \yii\web\Controller
             'status'=>$success?'success':'warning',
             'message'=>$success?'Добавлено! '.\yii\helpers\Html::a('<em>Перейти в корзину</em>',['index']).'.':'Не удалось обновить корзину',
             'sended'=>Yii::$app->request->post(),
+            'state'=>\worstinme\zcart\widgets\CartState::widget(['cart'=>$cart]),
         ];
 
     }
