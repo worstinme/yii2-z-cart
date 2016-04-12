@@ -9,10 +9,10 @@ use yii\helpers\Url;
 <?php if ($model !== null) : ?>
 
 <div class="uk-grid uk-grid-collapse z-cart-widget">
-<div class="uk-width-medium-1-3 uk-text-center">
-<i class="uk-icon-plus"></i> <?= Html::textInput('count', '1',['size'=>1]); ?> <i class="uk-icon-minus"></i>
+<div class="uk-width-1-3 uk-text-center">
+<i class="uk-icon-minus" data-minus></i> <?= Html::textInput('count', null,['size'=>1,'required'=>true,'placeholder'=>'0']); ?> <i class="uk-icon-plus" data-plus></i>
 </div>
-<div class="uk-width-medium-2-3 uk-text-center">
+<div class="uk-width-2-3 uk-text-center">
 <?= Html::a($label, $url = null, ['class'=> 'buy-button', 
     	'data'=> [
     		'item_id'=>$model->id, 
@@ -28,6 +28,18 @@ use yii\helpers\Url;
 <?php $url = yii\helpers\Url::toRoute(['/cart/to-order']);
 
 $js = <<<JS
+
+$(".z-cart-widget [data-minus]").on("click",function(e){
+    var input = $(this).parent("div").find("input");
+    input.val(Number(input.val()) - 1);
+    e.preventDefault();
+});
+
+$(".z-cart-widget [data-plus]").on("click",function(e){
+    var input = $(this).parent("div").find("input");
+    input.val(Number(input.val()) + 1);
+    e.preventDefault();
+});
 
 $(".buy-button").on("click", function(e) {
 	var count = $(this).parents(".z-cart-widget").find("[name='count']").val(), 
