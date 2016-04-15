@@ -47,7 +47,13 @@ $this->params['breadcrumbs'][] = $this->title;
 				]]); ?>
 				<?php endif ?>
 			</td>
-			<td class="uk-text-center count"><?=$item->count?></td>
+			<td class="uk-text-center count">
+				<?= Html::textInput('count', $item->count,['data'=>['count'=>$item->count]]); ?>
+				<?= Html::a('<i class="uk-icon-check"></i>', ['index'], ['class'=>'z-cart-save  uk-hidden', 'data' => [ 
+						'method'=>'post','pjax'=>true,
+						'params' => [ 'item_id'=>$item->item_id, 'relation'=>$item->relation, 'count'=>0, ],
+				]]); ?>
+			</td>
 			<td>
 				<?= Html::a('<i class="uk-icon-plus"></i>', ['index'], ['class'=>'z-cart-plus', 'data' => [ 
 						'method'=>'post','pjax'=>true,
@@ -92,8 +98,29 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?php endif ?>
 
+	<p class="uk-text-center"><?= Html::a('<i class="uk-icon-list-alt"></i> История заказов', ['orders']); ?></p>
+
+	<?php $js = <<<JS
+
+$("input[name='count']").on("keyup change",function(e){
+    $(this).next(".z-cart-save").removeClass("uk-hidden");
+});
+
+$("body").on("mouseenter keypress click",".z-cart-save",function(e){
+    var params = $(this).data("params");
+    var input = $(this).prev("input[name='count']");
+    params.count = input.val() - Number(input.data('count')); 
+    $(this).data("params",params);
+    console.log(params);
+});
+
+JS;
+
+$this->registerJs($js, $this::POS_READY); ?>
+
 <?php  \yii\widgets\Pjax::end(); ?>
 
 
 </div>
 </div>
+

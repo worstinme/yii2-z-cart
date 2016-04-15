@@ -8,11 +8,10 @@ use yii\helpers\Url;
 ?>
 <?php if ($model !== null) : ?>
 
-<div class="uk-grid uk-grid-collapse z-cart-widget">
-<div class="uk-width-1-3 uk-text-center">
+<div class="z-cart-widget">
+
 <i class="uk-icon-minus" data-minus></i> <?= Html::textInput('count', null,['size'=>1,'required'=>true,'placeholder'=>'0']); ?> <i class="uk-icon-plus" data-plus></i>
-</div>
-<div class="uk-width-2-3 uk-text-center">
+
 <?= Html::a($label, $url = null, ['class'=> 'buy-button', 
     	'data'=> [
     		'item_id'=>$model->id, 
@@ -21,9 +20,9 @@ use yii\helpers\Url;
     	]
     ]); ?>
 
+</div>
+
 <?php endif; ?>
-</div>
-</div>
 
 <?php $url = yii\helpers\Url::toRoute(['/cart/to-order']);
 

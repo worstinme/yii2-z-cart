@@ -33,7 +33,8 @@ class CartOrderItems extends \yii\db\ActiveRecord
         return [
             [['item_id', 'relation', 'count'], 'required'],
             [['item_id','relation'], 'integer'],
-            [['price', 'count'], 'number'],
+            [['price'], 'number'],
+            [['count'],'integer'],
         ];
     }
 

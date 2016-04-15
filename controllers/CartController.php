@@ -59,6 +59,15 @@ class CartController extends \yii\web\Controller
         ]);
     }
 
+    public function actionOrder($id)
+    {
+        $model = $this->findModel($id);
+
+        return $this->render('order', [
+            'model' => $model,
+        ]);        
+    }
+
     public function actionCheckout() {
 
         $cart = new Cart;
@@ -132,6 +141,17 @@ class CartController extends \yii\web\Controller
             'state'=>\worstinme\zcart\widgets\CartState::widget(['cart'=>$cart]),
         ];
 
+    }
+
+    protected function findModel($id)
+    {   
+        $order = $this->orderModel;
+        
+        if (($model = $order::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     public function getViewPath()

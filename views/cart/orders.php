@@ -37,6 +37,16 @@ $this->params['breadcrumbs'][] = 'История заказов';
             [
                 'attribute'=>'id',
                 'label'=>'#',
+                'headerOptions'=>['class'=>'uk-text-center'],
+                'contentOptions'=>['class'=>'uk-text-center'],
+            ],
+            [   
+                'format'=>'raw',
+                'value' => function ($model, $index, $widget) {
+                    return Html::a('<i class="uk-icon-file-text"></i>', ['order','id'=>$model->id]);
+                },
+                'headerOptions'=>['class'=>'uk-text-center'],
+                'contentOptions'=>['class'=>'uk-text-center'],
             ],
             [
                 'attribute'=>'created_at',

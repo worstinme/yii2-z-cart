@@ -66,7 +66,7 @@ class CartOrders extends \yii\db\ActiveRecord
             'state' => 'State',
             'adress' => 'Адрес',
             'body' => 'Сообщение',
-            'contactName' => 'Контактное лиц',
+            'contactName' => 'Контактное лицо',
             'email' => 'Электронная почта',
             'phone' => 'Телефон',
             'paid' => 'Paid',
