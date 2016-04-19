@@ -136,7 +136,7 @@ class CartController extends \yii\web\Controller
             'items'=>$cart->items,
             'success'=>$success,
             'status'=>$success?'success':'warning',
-            'message'=>$success?'Добавлено! '.\yii\helpers\Html::a('<em>Перейти в корзину</em>',['index']).'.':'Не удалось обновить корзину',
+            'message'=>$success?'Добавлено! '.\yii\helpers\Html::a('Перейти в корзину',['index']).'.':'Не удалось обновить корзину',
             'sended'=>Yii::$app->request->post(),
             'state'=>\worstinme\zcart\widgets\CartState::widget(['cart'=>$cart]),
         ];
