@@ -57,7 +57,7 @@ class CartOrderItems extends \yii\db\ActiveRecord
     public function getModel() {
         if($this->model === null && !empty(Yii::$app->params['z-cart']['relations'][$this->relation])) {
             $class = Yii::$app->params['z-cart']['relations'][$this->relation];
-            $this->model = $class::findOne($this->item_id);
+            $this->model = $class::find()->from($class::tablename())->where([$class::tablename().'.id'=>$this->item_id])->one();
         }
         return $this->model;
     }
