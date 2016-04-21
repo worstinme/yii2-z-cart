@@ -16,6 +16,7 @@ class AdminController extends Controller
 {
     public $access = ['admin'];
     public $orderModel = '\worstinme\zcart\models\CartOrders';
+    public $relations = [];
     /**
      * @inheritdoc
      */

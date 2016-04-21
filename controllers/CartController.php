@@ -13,6 +13,7 @@ class CartController extends \yii\web\Controller
     
     public $checkoutAccess = ['@'];
     public $orderModel = '\worstinme\zcart\models\CartOrders';
+    public $relations = [];
 
     public function behaviors()
     {
