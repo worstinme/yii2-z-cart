@@ -8,16 +8,16 @@ use yii\helpers\Url;
 ?>
 <?php if ($model !== null) : ?>
 
-<div class="z-cart-widget">
-
-<i class="uk-icon-minus" data-minus></i> <?= Html::textInput('count', null,['size'=>1,'required'=>true,'placeholder'=>'0']); ?> <i class="uk-icon-plus" data-plus></i>
-
-<?= Html::a($label, $url = null, ['class'=> 'buy-button', 
-    	'data'=> [
-    		'item_id'=>$model->id, 
-    		'relation'=>0, 
-    		'price'=>$model->price
-    	]
+<div class="z-cart-widget order-group">
+<button class="uk-button uk-button-danger" data-minus><i class="uk-icon-minus"></i></button>
+<?= Html::textInput('count', 1,['size'=>1,'required'=>true,'placeholder'=>'0']); ?>
+<button class="uk-button uk-button-danger" data-plus><i class="uk-icon-plus"></i></button>
+<?= Html::a($label, $url = null, ['class'=> 'buy-button uk-button uk-button-danger', 
+        'data'=> [
+            'item_id'=>$model->id, 
+            'relation'=>0, 
+            'price'=>$model->price
+        ]
     ]); ?>
 
 </div>
@@ -41,12 +41,12 @@ $(".z-cart-widget [data-plus]").on("click",function(e){
 });
 
 $(".buy-button").on("click", function(e) {
-	var count = $(this).parents(".z-cart-widget").find("[name='count']").val(), 
+    var count = $(this).parents(".z-cart-widget").find("[name='count']").val(), 
         relation = $(this).data("relation"), 
         price = $(this).data("price"), 
         item_id = $(this).data("item_id");
 
-	$.ajax({
+    $.ajax({
         url: '$url',
         type: 'POST',
         data: {
