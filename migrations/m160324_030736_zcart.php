@@ -27,7 +27,7 @@ class m160324_030736_zcart extends Migration
             'id' => $this->primaryKey(),
             'order_id' => $this->integer()->notNull(),
             'item_id' => $this->integer()->notNull(),
-            'model' => $this->string()->notNull(),
+            'relation' => $this->string()->defaultValue(0),
             'price' => $this->float()->notNull(),
             'count' => $this->integer()->notNull(),
         ], $tableOptions);
