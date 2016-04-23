@@ -20,10 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 
-<div class="main">
-<div class="uk-container uk-container-center">
+<div class="cart cart-orders">
 
-	<table class="items z-cart uk-table uk-form uk-table-condensed uk-table-striped uk-table-hover uk-table-bordered">
+	<table class="uk-table uk-form uk-table-condensed uk-table-striped uk-table-hover uk-table-bordered">
 		<thead>
 			<tr>
 				<th>Наименование</th>
@@ -63,5 +62,4 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?php endforeach ?>
 	</ul>
 
-</div>
 </div>
