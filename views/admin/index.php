@@ -86,13 +86,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'uk-text-center'],      
             ],
             [
-                'attribute'=>'user.username',
                 'label'=>'Пользователь',
                 'format' => 'raw',
                 'value' => function ($model, $index, $widget) {
-                    return $model->user !== null ? 
-                        Html::a($model->user->username, ['/admin/users/view','id'=>$model->user_id],
-                        ['target'=>'_blank','data'=>['pjax'=>0]]) : null;
+                    return $model->user !== null ? $model->user->username : null;
                 },
                 'contentOptions'=>['class'=>'uk-text-center'],    
                 'headerOptions'=>['class'=>'uk-text-center'],  
