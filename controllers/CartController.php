@@ -14,6 +14,7 @@ class CartController extends \yii\web\Controller
     public $checkoutAccess = ['@'];
     public $orderModel = '\worstinme\zcart\models\CartOrders';
     public $relations = [];
+    public $breadcrumbs = false;
 
     public function behaviors()
     {
@@ -75,7 +76,7 @@ class CartController extends \yii\web\Controller
 
         $order = $this->orderModel;
 
-        if ($cart->sum < Yii::$app->params['z-cart']['min_to_order']) {
+        if ($cart->sum < $cart->minToOrder) {
             return $this->redirect(['index']);
         }
 

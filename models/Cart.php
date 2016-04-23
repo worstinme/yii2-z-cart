@@ -74,4 +74,18 @@ class Cart extends Model
         return $amount;
     }
 
+    public function getMinToOrder() {
+        if (Yii::$app->has('zoo')) {
+           return Yii::$app->zoo->config('cart_min_to_order',500);
+        }
+        return !empty(Yii::$app->params['z-cart']['min_to_order']) ? Yii::$app->params['z-cart']['min_to_order'] : 500;
+    }
+
+    public function getEmptyCartText() {
+        if (Yii::$app->has('zoo')) {
+           return Yii::$app->zoo->config('empty_cart_text','Ваш заказ пуст.');
+        }
+        return !empty(Yii::$app->params['z-cart']['empty_cart_text']) ? Yii::$app->params['z-cart']['empty_cart_text'] : 'Ваш заказ пуст.';
+    }
+
 }

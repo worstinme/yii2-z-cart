@@ -49,7 +49,7 @@ class CartOrdersSearch extends CartOrders
      */
     public function search($params)
     {
-        $query = CartOrders::find()->joinWith(['user']);
+        $query = CartOrders::find();
 
         // add conditions that should always apply here
 

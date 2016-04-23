@@ -78,7 +78,7 @@ class CartOrders extends \yii\db\ActiveRecord
     }
 
     public function getUser() {
-        return $this->hasOne(Yii::$app->user->identity->className(),['id'=>'user_id']);
+        return Yii::$app->user->findIdentity($this->user_id);
     }
 
     public function getSum() {
