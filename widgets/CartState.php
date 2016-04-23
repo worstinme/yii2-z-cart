@@ -12,7 +12,9 @@ class CartState extends \yii\base\Widget
 
     public $options;
 
-    public $label = 'Заказать';
+    public $title = 'Корзина';
+    public $title_a = '';
+    public $title_b = '';
 
     public function init()
     {
@@ -24,7 +26,9 @@ class CartState extends \yii\base\Widget
         $cart = $this->cart === null ? new Cart : $this->cart ;
 
         return $this->render('cart-state',[
-            'label'=>$this->label,
+            'title'=>$this->title,
+            'title_a'=>$this->title_a,
+            'title_b'=>$this->title_b,
             'cart'=>$cart,
         ]);
     }
