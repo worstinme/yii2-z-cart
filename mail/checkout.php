@@ -2,13 +2,7 @@
 
 use yii\helpers\Html;
 
-$username = $order->user !== null ? ', '.Html::encode($order->user->username) : '';
-
 ?>
- 
-<p>Здравствуйте<?= $username ?>!</p>
-<p><b>Ваш заказ: </b></p>
-
 <table style="width:100%">
 <thead>
 	<tr>
