@@ -19,7 +19,7 @@ class m160324_030736_zcart extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'state' => $this->integer()->notNull()->defaultValue(0),
-            'params' => $this->integer()->notNull(),
+            'params' => $this->text(),
             'paid' => $this->integer()->defaultValue(0),
         ], $tableOptions);
 
