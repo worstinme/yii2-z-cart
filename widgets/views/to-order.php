@@ -8,10 +8,10 @@ use yii\helpers\Url;
 ?>
 <?php if ($model !== null) : ?>
 
-<div class="z-cart-widget order-group">
-<button class="uk-button uk-button-danger" data-minus><i class="uk-icon-minus"></i></button>
-<?= Html::textInput('count', 1,['size'=>1,'required'=>true,'placeholder'=>'0']); ?>
-<button class="uk-button uk-button-danger" data-plus><i class="uk-icon-plus"></i></button>
+<div class="z-cart-widget order-group uk-display-inline-block">
+<button class="uk-hidden-small uk-button uk-button-danger" data-minus><i class="uk-icon-minus"></i></button>
+<?= Html::textInput('count', 1,['size'=>1,'required'=>true,'placeholder'=>'0','class'=>'uk-hidden-small ']); ?>
+<button class="uk-hidden-small uk-button uk-button-danger" data-plus><i class="uk-icon-plus"></i></button>
 <?= Html::a($label, $url = null, ['class'=> 'buy-button uk-button uk-button-danger', 
         'data'=> [
             'item_id'=>$model->id, 

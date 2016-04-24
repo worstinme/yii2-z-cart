@@ -15,12 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 
-<div class="uk-container uk-container-center">
-	<?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],]) ?>
-</div>
-
-
 <div class="cart cart-orders">
+
+	<div class="breadcrumbs">
+		<?= Breadcrumbs::widget(['links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],]) ?>
+	</div>
 
 	<table class="uk-table uk-form uk-table-condensed uk-table-striped uk-table-hover uk-table-bordered">
 		<thead>
