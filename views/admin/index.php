@@ -86,15 +86,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'uk-text-center'],      
             ],
             [
-                'label'=>'Пользователь',
-                'format' => 'raw',
-                'value' => function ($model, $index, $widget) {
-                    return $model->user !== null ? $model->user->username : null;
-                },
-                'contentOptions'=>['class'=>'uk-text-center'],    
-                'headerOptions'=>['class'=>'uk-text-center'],  
-            ],
-            [
                 'class' => 'yii\grid\ActionColumn',
                 'template'=>'{delete}',
                 'buttons'=>[
