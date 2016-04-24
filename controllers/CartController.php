@@ -52,22 +52,66 @@ class CartController extends \yii\web\Controller
 
         $order = $this->orderModel;
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $order::find()->where(['user_id'=>Yii::$app->user->identity->id])
-        ]);
+        $allow = Yii::$app->request->cookies->getValue('report-allow',false);
+
+        if ($allow) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $order::find()->orderBY('id DESC'),
+            ]);
+        }
+        else {
+
+            if (Yii::$app->user->isGuest) {
+                return $this->goHome();
+            }
+
+            $dataProvider = new ActiveDataProvider([
+                'query' => $order::find()->where(['user_id'=>Yii::$app->user->identity->id])->orderBY('id DESC')
+            ]);
+        }
 
         return $this->render('orders',[
             'dataProvider'=>$dataProvider,
         ]);
     }
 
+    public function actionReport() {
+
+        if (Yii::$app->has('zoo')) $secret = Yii::$app->zoo->config('cart_report_secret',false);
+
+        if (!isset($secret) || $secret === false) {
+            return $this->goHome();
+        }
+
+        $allow = Yii::$app->request->cookies->getValue('report-allow',false);
+
+        if (Yii::$app->request->isPost) {
+            if (Yii::$app->request->post('secret') == $secret) {
+                Yii::$app->response->cookies->add(new \yii\web\Cookie(['name'=>'report-allow','value'=>true]));
+                $allow = true;
+            }
+        }
+
+        if (isset($allow) && $allow) {
+            return $this->redirect(['orders']);
+        }
+
+        return $this->render('deny');
+    }
+
     public function actionOrder($id)
     {
         $model = $this->findModel($id);
 
-        return $this->render('order', [
-            'model' => $model,
-        ]);        
+        $allow = Yii::$app->request->cookies->getValue('report-allow',false);
+
+        if ($allow || (!Yii::$app->user->isGuest && Yii::$app->user->identity->id == $model->user_id)) {
+            return $this->render('order', [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('deny');        
     }
 
     public function actionCheckout() {
@@ -91,11 +135,16 @@ class CartController extends \yii\web\Controller
 
             $cart->close();
 
-            $from = !empty(Yii::$app->params['senderEmail']) ? Yii::$app->params['senderEmail'] : Yii::$app->params['adminEmail'];
+            if (Yii::$app->has('zoo')) {
+                $adminEmail = Yii::$app->zoo->config('admin_email',Yii::$app->params['adminEmail']);
+                $from = Yii::$app->zoo->config('cart_sender_email',$adminEmail);
+            }
+
+            $secret = Yii::$app->zoo->config('cart_report_secret',false);
             
             Yii::$app->mailer->compose('@worstinme/zcart/mail/checkout', ['order' => $model])
                         ->setFrom($from)
-                        ->setTo(Yii::$app->params['adminEmail'])
+                        ->setTo($adminEmail)
                         ->setSubject($model->adminEmailSubject)
                         ->send();
 
@@ -110,13 +159,18 @@ class CartController extends \yii\web\Controller
 
             }
 
-            return $this->redirect(['orders']);
+            return $this->redirect(['finish']);
+
         } 
 
         return $this->render('checkout',[
             'cart'=>$cart,
             'model'=>$model,
         ]);
+    }
+
+    public function actionFinish() {
+        return $this->render('finish');
     }
 
     public function actionToOrder() {
