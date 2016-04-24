@@ -44,11 +44,9 @@ class CartOrders extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['params'], 'required'],
             [['state', 'paid'], 'integer'],
-            [['params'], 'string'],
-
             [$this->jsonParams,'string'],
+            ['params','safe'],
             ['email','email'],
         ];
     }
@@ -75,10 +73,6 @@ class CartOrders extends \yii\db\ActiveRecord
 
     public function getItems() {
         return $this->hasMany(CartOrderItems::className(),['order_id'=>'id']);
-    }
-
-    public function getUser() {
-        return Yii::$app->user->findIdentity($this->user_id);
     }
 
     public function getSum() {
@@ -122,6 +116,8 @@ class CartOrders extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
+
+
         if (parent::beforeSave($insert)) {
 
             if (!Yii::$app->user->isGuest && $insert) {
